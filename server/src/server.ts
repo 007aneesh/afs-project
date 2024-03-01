@@ -6,17 +6,18 @@ interface Todo {
   content: string;
 }
 
-interface User{
-  firstName: string,
-  lastName: string,
-  email: string
-}
+// interface User{
+//   firstName: string,
+//   lastName: string,
+//   email: string
+// }
 
 const createTodo = async (data: Todo) => {
   await prisma.todo.create({
     data: {
-      status: data.status,
+      status: "Pending",
       content: data.content,
+      // userId: data.userId
     },
   });
 };
@@ -32,6 +33,7 @@ const updateTodo = async (id: number, data: Todo) => {
       id: id,
     },
     data: {
+      status: data.status,
       content: data.content,
       // updatedAt: Date()
     },
@@ -49,14 +51,19 @@ const deleteTodo = async (id: number) => {
 
 // const createUser = async  (userData: User) => {
 //   const user = await prisma.user.create({
-
-//   })
-
-// }
+//     data:{
+//       firstName: userData.firstName,
+//       lastName: userData.lastName,
+//       email: userData.email
+//     }
+//   });
+//   return user;
+// };
 
 module.exports = {
   createTodo,
   getAllTodos,
   updateTodo,
   deleteTodo,
+  // createUser
 };

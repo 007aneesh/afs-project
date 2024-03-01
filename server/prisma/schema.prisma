@@ -19,13 +19,14 @@ model Todo{
   updatedAt DateTime @updatedAt
   status String
   content String
-  user User @relation(fields: [id], references: [id])
+  // userId  Int 
+  // user User @relation(fields: [userId], references: [id])
 }
 
-model User{
-  id Int @id @default(autoincrement())
-  firstName String
-  lastName String
-  email String @unique
-  todo Todo[]
-}
+// model User{
+//   id Int @id @default(autoincrement())
+//   firstName String
+//   lastName String
+//   email String @unique
+//   todo Todo[]
+// }

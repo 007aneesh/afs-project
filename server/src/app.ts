@@ -1,4 +1,5 @@
 const express = require("express");
+
 const { PrismaClient } = require("@prisma/client");
 const cors = require("cors");
 const functions = require("./server");
@@ -8,13 +9,12 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.get("/getAll", async (req: Request, res: Response) => {
+app.get("/get", async (req: Request, res: Response) => {
   try {
     const todos = await functions.getAllTodos();
-    console.log(todos);
-    const myBlob = new Blob();
-    const options = { status: 200, statusText: "SuperSmashingGreat!" };
-    return new Response(myBlob, options);
+    console.log("todos", todos);
+
+    Response.json(todos);
   } catch (error) {
     return Error("Error getting all Todos");
   }
