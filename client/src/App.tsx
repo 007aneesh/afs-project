@@ -6,17 +6,22 @@ import "./App.css";
 import axios from "axios";
 const baseurl = "http://localhost:5000";
 interface Todo {
+  id: number;
   status: string;
   content: string;
+  createdAt: Date;
 }
 
 function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
   useEffect(() => {
-    const post = async () => {
-      const response: Todo[] = await axios.get(`${baseurl}/get`);
-      setTodos(response);
-      console.log('dt:::', todos, response);
+    const post = () => {
+      axios.get<Todo[]>(`${baseurl}/get`).then(response => {
+        setTodos(response.data);
+      })
+      .catch(error => {
+        console.log(error);
+      })
     };
     post();
   }, [todos]);
@@ -40,44 +45,50 @@ function App() {
 
   return (
     <>
-      <div className="flex flex-col min-h-screen h-full w-screen items-center py-10 px-16">
-        <div className="pb-5">
+      <div className="flex flex-col min-h-screen h-full w-screen items-center py-8 px-16">
+        <div className="pb-4">
           <h1 className="text-3xl font-semibold">Welcome, #user📝</h1>
         </div>
         <div>
-          <div className="mb-5">
+          <div className="mb-4">
             <Input />
           </div>
         </div>
-        <div className="mx-10 w-full min-h-[70vh] h-full grid grid-cols-3 gap-5 p-2 border border-b-2 ">
-          <div className="w-full h-full bg-red-100 flex flex-col p-1">
+        <div className="mx-10 w-full h-[72vh] grid grid-cols-3 gap-5 p-2 border border-b-2">
+          <div className="w-full h-full bg-red-100 flex flex-col p-1 overflow-y-scroll">
             <div className="py-1 w-full flex items-center justify-center font-medium text-lg">
               <h1>Pending</h1>
             </div>
             <div className="overflow-y-scroll h-full sc p-3">
-              {todos.map((data) => (
-                <div>
-                  <Todoe />
+              {todos.filter((data) => data.status === "Pending").map((data) => (
+                <div key={data.id}>
+                  <Todoe todoData={data} />
                 </div>
               ))}
             </div>
           </div>
-          <div className="w-full h-full bg-blue-100  flex flex-col  p-1">
+          <div className="w-full h-[70vh] bg-blue-100  flex flex-col p-1 overflow-y-scroll">
             <div className="py-1 w-full flex items-center justify-center font-medium text-lg">
               <h1>In progress</h1>
             </div>
             <div className="overflow-y-scroll h-full sc p-3">
-              <Todoe />
-              <Todoe />
+            {todos.filter((data) => data.status === "In Progress").map((data) => (
+              <div key={data.id}>
+                <Todoe todoData={data}/>
+              </div>
+            ))}
             </div>
           </div>
-          <div className="w-full h-full bg-green-100   flex flex-col p-1">
+          <div className="w-full h-[70vh] bg-green-100   flex flex-col p-1 overflow-y-scroll">
             <div className="py-1 w-full flex items-center justify-center font-medium text-lg">
               <h1>Completed</h1>
             </div>
             <div className="overflow-y-scroll h-full sc p-3">
-              <CTodo />
-              <CTodo />
+            {todos.filter((data) => data.status === "Completed").map((data) => (
+              <div key={data.id}>
+                <CTodo todoData={data} />
+              </div>
+            ))}
             </div>
           </div>
         </div>

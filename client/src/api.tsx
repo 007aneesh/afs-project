@@ -12,10 +12,10 @@ export async function create(data: Todo) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ content: data.content }),
+      body: JSON.stringify({ content: data.content, status: data.status }),
     });
   } catch (err) {
-    alert("Failed to create!");
+    console.log(err);
   }
 }
 
@@ -33,7 +33,6 @@ export async function getAll() {
       throw new Error(`API request failed with status ${response.status}`);
     }
 
-    console.log("kk:", data); 
 
     return await data; 
   } catch (error) {
@@ -63,7 +62,9 @@ export async function update(id: number, data: Todo) {
 
 export async function remove(id: number) {
   try {
-    await fetch(`${baseurl}/delete/${id}`);
+    await fetch(`${baseurl}/delete/${id}`, {
+      method: "DELETE",
+    });
     alert("Successfully removed!");
   } catch (err) {
     console.log(err);
