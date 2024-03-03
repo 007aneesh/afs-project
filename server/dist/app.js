@@ -8,51 +8,57 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const { PrismaClient } = require("@prisma/client");
 const cors = require("cors");
-const functions = require("./server");
+const server_1 = require("./server");
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.get("/getAll", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get("/get", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const todos = yield functions.getAllTodos();
-        return todos;
+        const todos = yield (0, server_1.getAllTodos)();
+        res.json(todos);
     }
     catch (error) {
-        return Error("Error getting all Todos");
+        res.status(500).json({ error: "Error getting all Todos" });
     }
 }));
 app.post("/addTodo", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield functions.createTodo(req.body);
+        yield (0, server_1.createTodo)(req.body);
+        console.log("created");
     }
     catch (error) {
         console.log(error);
         return Error("Error adding new todo");
     }
 }));
-app.put("/update", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.put("/update/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let id = Number(req.url.split("/")[2]);
     let data = req.body;
     try {
-        const updatedTodo = yield functions.updateTodo(data);
+        const updatedTodo = yield (0, server_1.updateTodo)(id, data);
         if (!updatedTodo)
-            return Error('No Todo with this id');
-        return JSON.stringify({ message: 'Updated Successfully', content: updatedTodo });
+            return Error("No Todo with this id");
+        console.log("Updated Todo!!\n");
+        return res.status;
     }
     catch (e) {
-        return Error('Server error');
+        console.log("ERROR UPDATING TODO:\n", e);
+        return Error("Server error");
     }
 }));
 app.delete("/delete/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let id = req.url;
     try {
-        yield functions.deleteTodo(Number(id.split("/")[2]));
+        yield (0, server_1.deleteTodo)(Number(id.split("/")[2]));
+        console.log("deleted");
     }
     catch (error) {
         console.log(error);
         return Error("Error deleting the selected Todo");
     }
 }));
-const server = app.listen(5000, () => console.log("Server ready"));
+app.listen(5000, () => console.log("Server ready"));

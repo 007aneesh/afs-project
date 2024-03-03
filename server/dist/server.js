@@ -9,32 +9,48 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.deleteTodo = exports.updateTodo = exports.getAllTodos = exports.createTodo = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
+// interface User{
+//   firstName: string,
+//   lastName: string,
+//   email: string
+// }
 const createTodo = (data) => __awaiter(void 0, void 0, void 0, function* () {
     yield prisma.todo.create({
         data: {
             status: data.status,
-            content: data.content
-        }
+            content: data.content,
+            // userId: data.userId
+        },
     });
 });
+exports.createTodo = createTodo;
 const getAllTodos = () => __awaiter(void 0, void 0, void 0, function* () {
-    const todos = yield prisma.todo.findMany();
-    console.log(todos);
-    return todos;
+    try {
+        const todos = yield prisma.todo.findMany({});
+        return todos;
+    }
+    catch (err) {
+        console.log(err, "error receiving todos");
+    }
 });
-const updateTodo = (id, content) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getAllTodos = getAllTodos;
+const updateTodo = (id, data) => __awaiter(void 0, void 0, void 0, function* () {
     const updatedTodo = yield prisma.todo.update({
         where: {
-            id: id
+            id: id,
         },
         data: {
-            content: content
-        }
+            status: data.status,
+            content: data.content,
+            // updatedAt: Date()
+        },
     });
     return updatedTodo;
 });
+exports.updateTodo = updateTodo;
 const deleteTodo = (id) => __awaiter(void 0, void 0, void 0, function* () {
     yield prisma.todo.delete({
         where: {
@@ -42,9 +58,20 @@ const deleteTodo = (id) => __awaiter(void 0, void 0, void 0, function* () {
         },
     });
 });
-module.exports = {
-    createTodo,
-    getAllTodos,
-    updateTodo,
-    deleteTodo,
-};
+exports.deleteTodo = deleteTodo;
+// const createUser = async  (userData: User) => {
+//   const user = await prisma.user.create({
+//     data:{
+//       firstName: userData.firstName,
+//       lastName: userData.lastName,
+//       email: userData.email
+//     }
+//   });
+//   return user;
+// };
+// module.exports = {
+//   createTodo,
+//   getAllTodos,
+//   updateTodo,
+//   deleteTodo,
+// };
