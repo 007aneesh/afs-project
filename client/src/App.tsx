@@ -39,7 +39,7 @@ function App() {
             <Input />
           </div>
         </div>
-        <div className="mx-10 w-full h-[72vh] grid grid-cols-3 gap-5 p-2 ">
+        <div className="mx-10 w-full h-[70vh] grid grid-cols-3 gap-5 p-2 ">
           <div className="w-full h-full  flex flex-col p-1 overflow-y-scroll">
             <div className="py-1 w-full flex items-center justify-center font-semibold text-lg">
               <h1>Pending</h1>
